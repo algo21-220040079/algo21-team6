@@ -35,7 +35,7 @@ def update_data(table_name, sql_password):  # 提供不同频率数据的抓取�
 
     # 目前是全量更新，找时间改成增量更新
     try:
-        df2 = pd.read_sql_query(sql, engine).drop(['index'],axis=1)
+        df2 = pd.read_sql_query(sql, engine).drop(['index'], axis=1)
         df2 = df2[:-1]
         df_new = pd.concat([df2, df1], axis=0, ignore_index=True, copy=True)
         df_new = df_new.drop_duplicates(keep='last', inplace=False)
@@ -52,7 +52,7 @@ def update_data(table_name, sql_password):  # 提供不同频率数据的抓取�
 def get_data(table_name, sql_password):     # 提取数据为df
     engine = create_engine('mysql+pymysql://root:{0}@localhost:3306/history_data'.format(sql_password))
     sql = ''' select * from {0}; '''.format(table_name)
-    df = pd.read_sql_query(sql, engine)
+    df = pd.read_sql_query(sql, engine).drop(['index'], axis=1)
     return df
 
 
