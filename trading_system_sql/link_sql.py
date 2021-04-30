@@ -31,18 +31,27 @@ def update_data(table_name, sql_password):  # 提供不同频率数据的抓取�
 
     # 连接mysql
     engine = create_engine('mysql+pymysql://root:{0}@localhost:3306/history_data'.format(sql_password))
-    sql = ''' select * from {0}; '''.format(table_name)
 
-    # 目前是全量更新，找时间改成增量更新
+
     try:
-        df2 = pd.read_sql_query(sql, engine).drop(['index'], axis=1)
-        df2 = df2[:-1]
-        df_new = pd.concat([df2, df1], axis=0, ignore_index=True, copy=True)
-        df_new = df_new.drop_duplicates(keep='last', inplace=False)
-        df_new = df_new.reset_index(drop=True)
-        df_new.to_sql(table_name, engine, if_exists='replace', index=True)
-        # df_new.to_sql(table_name, engine, if_exists='append', index=True)
-        print('Write to Mysql table {0} successfully!'.format(table_name))
+        # 增量更新
+        sql = '''select * from {0} ORDER BY startsAt DESC LIMIT 1;'''.format(table_name)
+        df2 = pd.read_sql_query(sql, engine)
+        i = df1.loc[df1.startsAt == df2.loc[0, 'startsAt']].index
+        df_app = df1.loc[i[0] + 1:]
+        df_app = df_app.reset_index(drop=True)
+        df_app.index = df_app.index + df2.loc[0, 'index'] + 1
+        df_app.to_sql(table_name, engine, if_exists='append', index=True)
+        print('Append to Mysql table {0} successfully!'.format(table_name))
+        # 全量更新
+        # sql = ''' select * from {0}; '''.format(table_name)
+        # df2 = pd.read_sql_query(sql, engine).drop(['index'], axis=1)
+        # df2 = df2[:-1]
+        # df_new = pd.concat([df2, df1], axis=0, ignore_index=True, copy=True)
+        # df_new = df_new.drop_duplicates(keep='last', inplace=False)
+        # df_new = df_new.reset_index(drop=True)
+        # df_new.to_sql(table_name, engine, if_exists='replace', index=True)
+        # print('Write to Mysql table {0} successfully!'.format(table_name))
     except:
         df_new = df1
         df_new.to_sql(table_name, engine, if_exists='replace', index=True)
