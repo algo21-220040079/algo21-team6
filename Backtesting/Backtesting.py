@@ -43,7 +43,7 @@ class Backtesting:
         d = dd.max()
         beta = self.data[['portfolio_gain', 'bitcoin_price_change']].cov().iat[0, 1] / self.data['bitcoin_price_change'].var()
         alpha = (total_ret['capital_line'] - total_ret['bitcoin_line'] * beta)
-        exReturn = self.data['portfolio_gain'] - 0.03 / 250
+        exReturn = self.data['portfolio_gain'] - self.data['bitcoin_price_change']
         sharpe_ratio = np.sqrt(len(exReturn)) * exReturn.mean() / exReturn.std()
         TA1 = round(total_ret['capital_line'] * 100, 2)
         TA2 = round(total_ret['bitcoin_line'] * 100, 2)
