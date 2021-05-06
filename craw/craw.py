@@ -14,18 +14,18 @@ def craw(url):
             time.sleep(1)
 
 
-url5 = 'https://api.bittrex.com/api/v1.1/public/getmarkethistory?market=usdt-btc'
+url5 = 'https://api.bittrex.com/v3/markets/BTC-USDT/trades'
 history_id = []
 history_oder = []
 history_data = []
 volume = 0.00
-result = craw(url5)['result']
-open_price = result[0]['Price']
-low = result[0]['Price']
-high = result[0]['Price']
-close = result[0]['Price']
-volume += result[0]['Quantity']
-history_id.append(result[0]['Id'])
+result = craw(url5)
+open_price = result[0]['rate']
+low = result[0]['rate']
+high = result[0]['rate']
+close = result[0]['rate']
+volume += float(result[0]['quantity'])
+history_id.append(result[0]['id'])
 history_oder.append(result[0])
 
 # 获取的时间限制是一分钟60次请求，所以会加上一个time.sleep(1)
@@ -33,19 +33,19 @@ time.sleep(1)
 
 number = 1
 while True:
-    result = craw(url5)['result']
+    result = craw(url5)
     for i in result:
-        if i['Id'] not in history_id:
-            if(low>i['Price']):
-                low = i['Price']
-            if(high<i['Price']):
-                high = i['Price']
-            close = i['Price']
-            volume += i['Quantity']
-            history_id.append(i['Id'])
+        if i['id'] not in history_id:
+            if(low>i['rate']):
+                low = i['rate']
+            if(high<i['rate']):
+                high = i['rate']
+            close = i['rate']
+            volume += float(i['quantity'])
+            history_id.append(i['id'])
             history_oder.append(i)
     data = {'getmarkethistory':history_oder}
-    history_data.append(data)
+    history_data.append(history_oder)
     history_oder = []
     number += 1
     if(number > 60):
@@ -53,13 +53,13 @@ while True:
             w.write(json.dumps(history_data)+'\n')
         with open('data.txt','a') as ws:
             ws.write(json.dumps({'data':time.time(),'open_price':open_price,'close':close,'low':low,'high':high,'volume':volume,'code':'btc'})+'\n')
-        open_price = result[-1]['Price']
-        close = result[-1]['Price']
-        low = result[-1]['Price']
-        high = result[-1]['Price']
+        open_price = result[-1]['rate']
+        close = result[-1]['rate']
+        low = result[-1]['rate']
+        high = result[-1]['rate']
         number = 0
         volume = 0.00
-        volume += result[-1]['Quantity']
+        volume += float(result[-1]['quantity'])
         history_data = []
         history_id = []
     print(data)
