@@ -1,9 +1,9 @@
 # algo21-team6
 Our team members and responsibility:
-  文皓平 220040079：Execution and Backtesting modules
-  邓伟杰 220040053：craw module and MySQL implementation
-  王冰: Portfolio module
-  谢迅: Strategy module
+  文皓平 220040079：Execution and Backtesting modules  
+  邓伟杰 220040053：craw module and MySQL implementation  
+  王冰220040082: Portfolio module  
+  谢迅220040088: Strategy module  
 
 Our system contains 7 parts:
 
