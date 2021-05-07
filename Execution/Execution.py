@@ -28,10 +28,8 @@ class Execution:
 
         if(self.signal == 'sell'):
             decrease_coin_number = (self.sell_amount - self.sell_amount*self.tip) / self.sell_last_price
-            # decrease_coin_number = self.coin_number/4
             self.count_coin_number((0.00000 - decrease_coin_number))
             self.count_principal(self.sell_amount)
-            # self.count_principal(decrease_coin_number*self.sell_last_price)
             exchange_number = decrease_coin_number
             print('action:sell,coins:' + str(decrease_coin_number) + ',money_amount:' + str(
                 self.sell_amount) + ',retail_price:' + str(self.sell_last_price))
