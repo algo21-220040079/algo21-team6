@@ -38,7 +38,7 @@ This module is to transfer the transaction data to our system, connecting data a
 (craw -> data -> Feed -> Strategy -> Portfolio -> Execution -> Backtesting)
 
   ## Strategy
-This module is used to analyze the transaction data to predict the trend of price. Firstly it receives the transaction data from the Feed module. Secondly, it will analyze the transaction data through functions in Strategy module. Thirdly, it will sets buy_index (buy index) and sell_index (sell index). Lastly, it will transport the buy_index and the sell_index to Portfollio module.
+This module is used to analyze the transaction data to predict the trend of price. Firstly it receives the transaction data from the Feed module. Secondly, it will analyze the transaction data through functions in Strategy module. Thirdly, it will make prediction (-1 or 1) based on analysis, and send such signals to Portfolio and Execution modules.
 
   ## Portfollio
 This module is used to manage position. Although we have judged the buying and selling trend, we need to limit the position. For example, we can set a limiting that the proportion of the position must less than 0.5. So, this module plays a limiting role. Then, the opening and selling signals will be sent to the next one--Execution module.
