@@ -45,7 +45,7 @@ This module is used to manage position. Although we have judged the buying and s
 
 There are the meaning of some parameters:
 
-buy_amount and sell_amount: It is a fixed rate to trade (In our setting, we start with principal 1 million, and we set this parameter to 100000)
+buy_amount and sell_amount: It is a fixed rate to trade (In our setting, we start with principal 1 million, and we set this parameter to 50000)
 trade_signal: It is a trading signal. The ‘sell’ is for sale. The ‘buy’ is for purchase. The ‘None’ is for inaction. In the subsequent code, that is a judgment basis.
 judge_position: It is standard to judge position, and the value is less than 1.
 
@@ -59,6 +59,22 @@ Each transection will both print in the console and save in record.txt.
 
   ## Backtesting
 This module firstly draw the backtesting line of our strategy and the market price of Bitcoin, then calculate total return, maximum drawback, alpha, beta and Sharpe ratio of our strategy.
+
+  ## Strategy Performance
+Back testing period: May 4th 10am to May 5th 10am
+(Data from May 4th 10am to 14:30pm is served as training set and thus not reflected in backtesting line and performance.)
+
+![Figure_1-3](https://user-images.githubusercontent.com/78809297/117442991-1776fc00-af6a-11eb-81e4-bb5e78821267.png)
+
+Strategy Performance:
+  - Total return：      Strategy 0.23%, Market -2.44%
+  - Maximum drawback：  Strategy 3.22%, Market 6.26%
+  - Alpha： 0.01, Beta：0.46，Sharpe Ratio：0.93
+  - Last portfolio:
+coin_number:10.021545527042575 principal:453647.7368489761
+
+
+  
 
 
 
