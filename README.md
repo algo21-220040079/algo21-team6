@@ -16,10 +16,22 @@ Our system contains 7 parts:
   - main function
   
   ## craw
-This module is a separate module. Running this craw.py, we will use an API called bittrex(https://api.bittrex.com/api/v1.1/public/getmarkethistory?market=usdt-btc) to get realtime bitcoin trading order. The to_dataframe.py perform the function that resamples the order flow to dataframe, which shows open,close,high,low and volume of trading price in a certain period (about 2-3mins,maybe has slightly difference). (btw: The time limit for getting is 60 requests per minute, so a time.sleep(1) is added.)
+This module is a separate module. There are two folders, craw and craw_sql. Mostlty, they are the same. The programme in 
+craw_sql can save the data in MySQL database directly. But for convenience and data-sharing with teammates, we can also save 
+in Json form and write it into txt with the programme in craw.
 
-To save the data, we have two ways. One way is to implement MySQL database. But for convenience and data-sharing with teammates, we can also save in Json form and write it into txt. There are two txt flies, one is the complete transaction data(named data_all.txt) that includes details of each transaction, and the other(named data.txt) is open,close,high,low and volume of trading price in a certain period as mentioned above. 
-In our craw module, the data.txt and data_all.txt have been saved, which show the data from 10a.m. May 4th to 10a.m. May 5th. In our later work, we will read the data.txt in our main function to start our whole backtesting system.
+Running this 'craw.py/craw_sql.py', we will use an API from bittrex exchange(https://api.bittrex.com/v3/markets/BTC-USDT/trades) 
+to get realtime bitcoin trading order. The 'to_dataframe.py/read_sql.py' perform the function that resamples the order flow 
+to dataframe, which shows open,close,high,low and volume of trading price in a certain period 
+(in this programme we just set it about 2-3mins as default, you can change it into a higher frequency).
+The folder craw_sql also has a programme named 'history_sql.py'. It can help you to get minutes, 5minutes and 1hour history data
+from bittrex exchange.
+
+When saving the data, we have two ways. One way is writing to table name 'data' and 'data_all' in MySQL database. We can 
+also write it into data.txt and data_all.txt. The table 'data_all' is the complete transaction data that includes 
+details of each transaction, and the 'data' is open,close,high,low and volume of trading price in a certain period as mentioned above. 
+In our craw module, the 'data.txt' and 'data_all.txt' have been saved. The MySQL data are saved in folder 'Dump20210507'. 
+In our later work, we will read the 'data' in our main function to start our whole backtesting system.
 
   ## Feed
 This module is to transfer the transaction data to our system, connecting data and further analysis modules.  
