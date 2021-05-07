@@ -8,9 +8,16 @@ def get_data(table_name, sql_password):     # 提取数据为df
     if table_name == 'data':
         df = pd.read_sql_query(sql, engine).drop(['index','code'], axis=1)
         df['date'] = pd.to_datetime(df['date'],unit='s')
+        df1 = df.iloc[:, 0:1]
+        df2 = df.iloc[:, 1:].astype(float)
+        df = pd.concat([df1, df2], axis=1)
     else:
-        df = pd.read_sql_query(sql, engine).drop(['index'], axis=1)
-        df.rename(index=str, columns={"startsAt": "date", "open": "open_price"}, inplace=True)
+        df = pd.read_sql_query(sql, engine).drop(['index','quoteVolume'], axis=1)
+        df.rename(index=str, columns={"startsAt": "date"}, inplace=True)
+        df1 = df.iloc[:, 0:1]
+        df2 = df.iloc[:, 1:].astype(float)
+        df = pd.concat([df1, df2], axis=1)
+
     return df
 
 
