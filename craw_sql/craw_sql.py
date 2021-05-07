@@ -46,16 +46,15 @@ while True:
             volume += float(i['quantity'])
             history_id.append(i['id'])
             history_oder.append(i)
-    data = {'getmarkethistory':history_oder}
-    history_data.append(history_oder)
-    history_oder = []
-    number += 1
+    if number == 1:
+        df1 = pd.DataFrame(result)
+        df1.to_sql('data_all', engine, if_exists='append', index=True)
+    if number != 1:
+        df1 = pd.DataFrame(history_oder)
+        df1.to_sql('data_all', engine, if_exists='append', index=True)
     if(number > 60):
-        # df1 = pd.DataFrame(history_data)
         df2 = pd.DataFrame({'date':time.time(),'open_price':[open_price],'close':[close],'low':[low],'high':[high],'volume':[volume],'code':['btc']})
-        # df1.to_sql('data_all', engine, if_exists='append', index=True)
         df2.to_sql('data', engine, if_exists='append', index=True)
-
         open_price = result[-1]['rate']
         close = result[-1]['rate']
         low = result[-1]['rate']
@@ -65,5 +64,7 @@ while True:
         volume += float(result[-1]['quantity'])
         history_data = []
         history_id = []
-    print(data)
+    number += 1
+    print(history_oder)
+    history_oder = []
     time.sleep(1)
