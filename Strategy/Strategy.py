@@ -14,21 +14,37 @@ class Strategy:
 
     def analysis(self):
         add_features(self.data)
+
         y = np.where(self.data.close.pct_change().shift(-1) > 0, 1, -1)
         self.data['next_signal'] = y
         train = self.data.iloc[:100,:] #以前100组数据为训练集
         train = train.dropna()
-        from xgboost import XGBClassifier
-        model = XGBClassifier(n_estimators=25)
-        X = train[['volume','ma', 'macd','macdsignal','macdhist','MOM10', 'K10', 'D10']]
+
+        X = train[['volume', 'ma', 'macd', 'macdsignal', 'macdhist', 'MOM10', 'K10', 'D10']]
         y = train[['next_signal']]
+
+        from xgboost import XGBClassifier
+        from sklearn.model_selection import GridSearchCV
+
+        #会出现很多次warning，但不影响运行
+        parameters = {'n_estimators': [15, 20,25,30], 'max_depth': [2, 3, 4, 5, 6],
+                      'min_samples_leaf': [5, 10, 15, 20, 30]}
+        new_model = XGBClassifier(random_state=2021)
+        grid_search = GridSearchCV(new_model, parameters, cv=5, scoring='accuracy')
+        grid_search.fit(X, y)
+        max_depth = grid_search.best_params_['max_depth']
+        n_estimators = grid_search.best_params_['n_estimators']
+        min_samples_leaf = grid_search.best_params_['min_samples_leaf']
+        model = XGBClassifier(max_depth=max_depth, n_estimators=n_estimators,
+                                       min_samples_leaf=min_samples_leaf, random_state=2021)
+
         model.fit(X,y)
         test = self.data.iloc[100:, :]
-        test.to_csv('./测试集详细数据.csv')
+        # test.to_csv('./测试集详细数据.csv')
         X_test = test[['volume','ma', 'macd','macdsignal','macdhist','MOM10', 'K10', 'D10']]
         y_pred = model.predict(X_test)
         test['y_pred'] = y_pred
-        test.to_csv('./2.csv')
+
         self.Portfollio = Portfollio(self.coin_number,self.principal,test,self.backtest)
 
         #下面是旧策略，效果不佳，注释于此
